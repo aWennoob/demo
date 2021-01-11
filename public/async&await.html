@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            height: 50px;
+            /* width: 0; */
+            background: skyblue;
+            color: white;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="load">
+        <!-- <h1>loading</h1> -->
+    </div>
+    <script>
+        //    async function sleep(delay=2000){
+        //     return new Promise(resolve=>{
+        //         setTimeout(() => {
+        //             resolve();
+        //         }, delay);
+        //     })
+        //    }
+        //    async function show(){
+        //        for (const name of ['aa','bb','cc']) {
+        //            await sleep();
+        //            console.log(name);
+        //        }
+        //    }
+        //    show()
+
+        //ajax封装
+        function ajax(url) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('get', url);
+                xhr.send();
+                xhr.onload = function () {
+                    if (this.status == 200) {
+                        setTimeout(() => {
+                            resolve(JSON.parse(xhr.response))
+                        }, 1000);
+
+                    } else {
+                        reject('加载失败')
+                    }
+                }
+                xhr.onerror = function () {
+                    reject(this)
+                }
+            })
+        }
+
+        // let url='http://localhost:3000/test?'+'name=wen';
+        // ajax(url).then(value=>console.log(value))
+
+        function query(name) {
+            return ajax(`http://localhost:3000/test?name=${name}`)
+        }
+
+        async function load(users) {
+            for (let i = 0; i < users.length; i++) {
+                let user = await query(users[i]);
+                let progress = (i + 1) / users.length * 100;
+                document.querySelector('#load').style.width = progress + '%';
+                document.querySelector('#load').innerHTML = `loading${Math.floor(progress)}%`
+            }
+        }
+        load(['aa', 'bb', 'cc', 'dd']);
+
+        //class与await结合
+        class User {
+            constructor(name){
+                this.name=name
+            }
+            then(resolve, reject) {
+               let user= ajax(`http://localhost:3000/test?name=${this.name}`);
+               resolve(user);
+            }
+        }
+        async function get() {
+           let user= await new User('boy')
+            console.log(user);
+        }
+        get();
+       //利用await Promise.all([p1(),p2()]) 可以同时执行p1,p2
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <script src="./promise_ES5.js"></script> -->
+    <script src="./myPromise.js"></script>
+    <!-- <script src="./promise_ES6.js"></script> -->
+    <script>
+        const p = new MyPromise((resolve, reject) => {
+        //    resolve(1)
+        reject('error')
+        setTimeout(() => {
+            resolve('success');
+            console.log('name');
+        }, 1000);
+        }).catch(a=>console.log(a)).then(a=>console.log(a))
+        // .then()
+        // .then(a=>console.log(a))
+        // console.log(p);
+        // new Promise((resolve,reject)=>{
+        //     resolve(1)
+        // }).then(a=>console.log(a)).then(a=>console.log(a)).then(a=>console.log(a))
+    </script>
+</body>
+
+</html>
